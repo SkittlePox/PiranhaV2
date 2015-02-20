@@ -51,6 +51,10 @@ public class PiranhaV2 {
         analyze();
         ai.clearNums();
         analyze();
+        ai.clearNums();
+        analyze();
+        ai.flagMines();
+        analyze();
         printStatus();
     }
 
@@ -123,6 +127,16 @@ public class PiranhaV2 {
     }
 
     public static void printStatus() {
+        for (int j = 0; j < columnsY; j++) {
+            for (int i = 0; i < rowsX; i++) {
+                if (boxes[i][j].isClear()) {
+                    System.out.print("[C]");
+                } else {
+                    System.out.print("[ ]");
+                }
+            }
+            print("");
+        }
         System.out.println();
         for (int d = 0; d < rowsX + 1; d++) {
             System.out.print("---");

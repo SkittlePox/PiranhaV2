@@ -59,7 +59,7 @@ public class Box {
     
     public void flagCheck() {
         unaccountedBoxes = status;
-        for(int d = 0; d < 8; d++) {
+        for(int d = 0; d <= 7; d++) {
             if(cardinals[d] == 9) {
                 unaccountedBoxes--;
             }
@@ -105,6 +105,6 @@ public class Box {
     
     public boolean isClear() {
         flagCheck();
-        return unaccountedBoxes == 0 && status != 1;
+        return unaccountedBoxes == 0 && status != -1;
     }
 }
