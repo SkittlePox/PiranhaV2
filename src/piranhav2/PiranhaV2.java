@@ -11,7 +11,7 @@ public class PiranhaV2 {
     public static Random rand = new Random();
     static String input;
 
-    static int rowsX = 9, columnsY = 9;
+    static int rowsX = 10, columnsY = 9;
     static Box[][] boxes = new Box[rowsX][columnsY];
 
     static int ScreenWidth, ScreenHeight;
@@ -20,7 +20,7 @@ public class PiranhaV2 {
     static Mouse mouse;
     static BufferedImage image;
 
-    static int homeX, homeY;
+    static int homeX, homeY, winCheckX, winCheckY;
     static int[] firstBox = new int[2];
     static int[] rootColor = {128, 128, 128};
     static int[] color90 = {192, 192, 192};
@@ -31,7 +31,7 @@ public class PiranhaV2 {
     static int[] color4 = {0, 0, 128};
     static int[] color5 = {128, 0, 0};
     static int[] color6 = {0, 128, 128};
-    static int[] color7b = {0, 0, 0};
+    static int[] color7bw = {0, 0, 0};
     static int[] color7 = {192, 192, 192};
     static int[] color8 = {128, 128, 128};
     static int[] color9 = {255, 0, 0};
@@ -47,15 +47,6 @@ public class PiranhaV2 {
         findMinesweeper();
         //guess();
         analyze();
-        ai.flagMines();
-        analyze();
-        ai.clearNums();
-        analyze();
-        ai.clearNums();
-        analyze();
-        ai.flagMines();
-        analyze();
-        printStatus();
     }
 
     public static void callibrateScreenSize() { //Simply gets screen size
@@ -96,6 +87,9 @@ public class PiranhaV2 {
                     userPause(1);
                     firstBox[0] = x + 12;
                     firstBox[1] = y + 54;
+                    winCheckY = y + 16;
+                    winCheckX = x + 75;
+                    winCheckX += (rowsX - 9) * 8;
                     print("Root square planted at " + firstBox[0] + " " + firstBox[1]);
                     userPause(1);
                     found = true;
@@ -204,7 +198,7 @@ public class PiranhaV2 {
                     boxes[x][y].setStatus(5);
                 } else if (isSameColor(red, green, blue, color6[0], color6[1], color6[2])) {
                     boxes[x][y].setStatus(6);
-                } else if (isSameColor(red, green, blue, color7b[0], color7b[1], color7b[2])) {
+                } else if (isSameColor(red, green, blue, color7bw[0], color7bw[1], color7bw[2])) {
                     color = image.getRGB(boxes[x][y].getX() - 1, boxes[x][y].getY() - 1);
                     blue = color & 0xFF;          // mask first 8 bits
                     green = (color >> 8) & 0xFF;  // shift right by 8 bits, then mask first 8 bits
@@ -262,6 +256,15 @@ public class PiranhaV2 {
         } else {
             guess();
         }
+    }
+
+    public static boolean didWeWin() {
+        image = takeScreenShot();   //Takes new screenshot
+        int color = image.getRGB(winCheckX, winCheckY);
+        int blue = color & 0xFF;          // mask first 8 bits
+        int green = (color >> 8) & 0xFF;  // shift right by 8 bits, then mask first 8 bits
+        int red = (color >> 16) & 0xFF;   // shift right by 16 bits, then mask first 8 bits
+        return isSameColor(red, green, blue, color7bw[0], color7bw[1], color7bw[2]);
     }
 
     public static void moveToBox(int x, int y) {
